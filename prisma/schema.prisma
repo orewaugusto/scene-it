@@ -15,14 +15,92 @@ datasource db {
 
 model User {
   id         Int      @id @default(autoincrement())
-  email      String
-  username   String
+  email      String   @unique
+  username   String   @unique
   password   String
   bio        String?
   avatarUrl  String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @default(now()) @updatedAt
 
+  ratings    Rating[]
+  lists      List[]
+  following  Follow[] @relation("Following")
+  followers  Follow[] @relation("Followers")
+
+  @@index([email])
+  @@index([username])
   @@map("users")
+}
+
+
+model Movie {
+  id          Int         @id @default(autoincrement())
+  title       String      @unique
+  description String?
+  releaseYear Int
+  posterUrl   String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @default(now()) @updatedAt
+
+  ratings     Rating[]
+  listEntries ListMovie[]
+
+  @@index([title])
+  @@map("movies")
+}
+
+model Rating {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  movieId    Int
+  rating     Int
+  review     String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  user       User     @relation(fields: [userId], references: [id])
+  movie      Movie    @relation(fields: [movieId], references: [id])
+
+  @@unique([userId, movieId])
+  @@map("ratings")
+}
+
+model List {
+  id          Int         @id @default(autoincrement())
+  userId      Int
+  title       String
+  description String?
+  isPublic    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @default(now()) @updatedAt
+
+  user        User        @relation(fields: [userId], references: [id])
+  movies      ListMovie[]
+
+  @@map("lists")
+}
+
+model ListMovie {
+  listId   Int
+  movieId  Int
+  position Int
+
+  list     List  @relation(fields: [listId], references: [id])
+  movie    Movie @relation(fields: [movieId], references: [id])
+
+  @@id([listId, movieId])
+  @@map("list_movies")
+}
+
+model Follow {
+  followerId Int
+  followedId Int
+
+  follower   User @relation("Following", fields: [followerId], references: [id])
+  followed   User @relation("Followers", fields: [followedId], references: [id])
+
+  @@id([followerId, followedId])
+  @@map("follows")
 }
 
