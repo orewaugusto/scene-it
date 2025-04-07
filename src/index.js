@@ -1,10 +1,8 @@
+"use strict";
 const express = require('express');
 const app = express();
-
-const PORT:string = '8080';
-
+const PORT = '8080';
 app.use(express.json());
-
 app.listen(PORT, () => {
-  console.log(`running on ${PORT}.`);
+    console.log(`running on ${PORT}.`);
 });
