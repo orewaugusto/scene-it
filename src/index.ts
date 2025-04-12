@@ -1,25 +1,18 @@
 import express, {Request, Response} from 'express';
 const app = express();
 
-import { PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import userRouter from './modules/users/users.routes';
 
 const PORT: string = '8080';
 
 app.use(express.json());
 
-app.get('/', async(req: Request, res: Response) => {
-  await prisma.user.create({
-    data: {
-      email: "teste@gmail.com",
-      password: crypto.randomUUID(),
-      username: "guilherme",
-    }
-  })
-  res.send('testing');
+// Routers
+app.use(userRouter);
 
-})
+app.get('/', async(req: Request, res: Response) => {
+  res.send('ok');
+});
 
 app.listen(PORT, () => {
   console.log(`running on ${PORT}.`);
