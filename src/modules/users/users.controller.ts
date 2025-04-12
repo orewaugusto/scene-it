@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import * as UserService from "./users.service";
+import { CreateUserDTO } from "./dtos/create-user.dto";
 
 export class UsersController {
    async createUser(req: Request, res: Response){
     try {
-      const {email, username, password} = req.body;
+      const {email, username, password} = req.body as CreateUserDTO;
     
   
     const user = await UserService.createUser({email, username, password});
