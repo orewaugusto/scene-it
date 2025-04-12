@@ -8,7 +8,7 @@ const PORT: string = '8080';
 app.use(express.json());
 
 // Routers
-app.use(userRouter);
+app.use("/users", userRouter);
 
 app.get('/', async(req: Request, res: Response) => {
   res.send('ok');
