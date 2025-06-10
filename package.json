@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "test": "jest",
+    "prisma:generate": "prisma generate",
     "prettier": "prettier . --write"
   },
   "keywords": [],
