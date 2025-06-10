@@ -1,4 +1,3 @@
-import { User } from "@prisma/client";
 import { CreateUserDTO } from "../../dtos/create-user.dto";
 import { UserWithoutPassword } from "../../types/user-without-password.type";
 

@@ -1,8 +1,7 @@
-import { UserRepositoryInterface } from "../repositories/interfaces/user-repository.interface";
-import { UserRepository } from "../repositories/users.repository";
-import { LoginUserServiceInterface } from "./interfaces/login-user.service.interface";
-import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { UserRepositoryInterface } from "../repositories/interfaces/user-repository.interface";
+import { LoginUserServiceInterface } from "./interfaces/login-user.service.interface";
 
 export class LoginUserService implements LoginUserServiceInterface {
   constructor(

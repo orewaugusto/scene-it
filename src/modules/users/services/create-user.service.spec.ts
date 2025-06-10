@@ -24,12 +24,6 @@ describe("createUserService", () => {
   });
 
   it("Should not be able to create a new user with an already registered email", async () => {
-    const newUser = await createUserService.execute({
-      email: "johndoe@gmail.com",
-      password: "teste123456",
-      username: "John Doe",
-    });
-
     expect(async () => {
       await createUserService.execute({
         email: "johndoe@gmail.com",
