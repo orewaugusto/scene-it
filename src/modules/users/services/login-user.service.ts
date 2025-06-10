@@ -7,7 +7,7 @@ import bcrypt from "bcryptjs";
 export class LoginUserService implements LoginUserServiceInterface {
   constructor(
     private userRepository: UserRepositoryInterface,
-    private tokenSecret: string
+    private tokenSecret: string,
   ) {}
 
   async execute(email: string, password: string): Promise<string> {
@@ -25,8 +25,6 @@ export class LoginUserService implements LoginUserServiceInterface {
       throw new Error("Token doesn't exist");
     }
 
-    return jwt.sign({ id: user.id }, this.tokenSecret, { expiresIn: '1d' });
+    return jwt.sign({ id: user.id }, this.tokenSecret, { expiresIn: "1d" });
   }
 }
-
-

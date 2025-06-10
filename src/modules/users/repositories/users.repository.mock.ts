@@ -3,21 +3,23 @@ import { UserRepositoryInterface } from "./interfaces/user-repository.interface"
 import { CreateUserDTO } from "../dtos/create-user.dto";
 
 export class UserRepositoryMock implements UserRepositoryInterface {
-  constructor(
-    private db: User[] = []
-  ){}
+  constructor(private db: User[] = []) {}
 
   async findUserByEmail(email: string): Promise<User | null> {
-    const userExists = this.db.find(user => user.email === email);
+    const userExists = this.db.find((user) => user.email === email);
 
-    if(!userExists){
+    if (!userExists) {
       return null;
     }
 
     return userExists;
   }
 
-  async createUser({username, password, email}: CreateUserDTO): Promise<User> {
+  async createUser({
+    username,
+    password,
+    email,
+  }: CreateUserDTO): Promise<User> {
     const newUser: User = {
       username: username,
       password: password,
@@ -26,11 +28,11 @@ export class UserRepositoryMock implements UserRepositoryInterface {
       updatedAt: new Date(),
       id: this.db.length,
       bio: "",
-      avatarUrl: ""
-    }
+      avatarUrl: "",
+    };
 
     console.log(newUser);
-    
+
     this.db.push(newUser);
     return newUser;
   }

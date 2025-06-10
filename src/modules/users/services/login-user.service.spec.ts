@@ -14,7 +14,7 @@ describe("loginUserService", () => {
     userRepository = new UserRepositoryMock();
     createUserService = new CreateUserService(userRepository);
     loginUserService = new LoginUserService(userRepository, "Lana");
-    process.env.TOKEN_SECRET = "0101"
+    process.env.TOKEN_SECRET = "0101";
     let newUser = await createUserService.execute({
       email: "johndoe@gmail.com",
       password: "teste123456",
@@ -25,7 +25,7 @@ describe("loginUserService", () => {
   it("should be able to login with a valid email and password", async () => {
     const authenticationToken = await loginUserService.execute(
       "johndoe@gmail.com",
-      "teste123456"
+      "teste123456",
     );
 
     expect(authenticationToken).toBeDefined();
@@ -35,7 +35,7 @@ describe("loginUserService", () => {
     expect(async () => {
       const authenticationToken = await loginUserService.execute(
         "johndoe@gmail.com",
-        "teste654321"
+        "teste654321",
       );
     }).rejects.toThrow("Password is incorrect");
   });
@@ -44,8 +44,8 @@ describe("loginUserService", () => {
     expect(async () => {
       const authenticationToken = await loginUserService.execute(
         "notjohndoe@gmail.com",
-        "teste123456"
+        "teste123456",
       );
     }).rejects.toThrow("No user with this email");
-  })
+  });
 });
