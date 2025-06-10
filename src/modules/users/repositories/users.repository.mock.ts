@@ -31,8 +31,6 @@ export class UserRepositoryMock implements UserRepositoryInterface {
       avatarUrl: "",
     };
 
-    console.log(newUser);
-
     this.db.push(newUser);
     return newUser;
   }

@@ -20,8 +20,6 @@ export class CreateUserService implements CreateUserServiceInterface {
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
 
-    console.log(salt);
-
     const newUser = await this.userRepository.createUser({
       email,
       username,
