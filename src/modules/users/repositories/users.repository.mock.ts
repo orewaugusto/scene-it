@@ -3,7 +3,17 @@ import { UserRepositoryInterface } from "./interfaces/user-repository.interface"
 import { CreateUserDTO } from "../dtos/create-user.dto";
 
 export class UserRepositoryMock implements UserRepositoryInterface {
-  constructor(private db: User[] = []) {}
+  public db: User[] = [];
+
+  async findUserById(id: number): Promise<User | null> {
+    const userFound = this.db.find((user) => user.id === id);
+
+    if (!userFound) {
+      return null;
+    }
+
+    return userFound;
+  }
 
   async findUserByEmail(email: string): Promise<User | null> {
     const userExists = this.db.find((user) => user.email === email);
@@ -33,5 +43,13 @@ export class UserRepositoryMock implements UserRepositoryInterface {
 
     this.db.push(newUser);
     return newUser;
+  }
+
+  async deleteUserById(id: number): Promise<void> {
+    const idx = this.db.findIndex((user) => user.id === id);
+
+    if (idx >= 0) {
+      this.db.splice(idx, 1)[0];
+    }
   }
 }

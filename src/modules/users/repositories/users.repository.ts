@@ -4,7 +4,17 @@ import { UserRepositoryInterface } from "./interfaces/user-repository.interface"
 import { CreateUserDTO } from "../dtos/create-user.dto";
 
 export class UserRepository implements UserRepositoryInterface {
-  constructor(private prisma = new PrismaClient()) {}
+  constructor(private prisma = new PrismaClient()) { }
+
+  async findUserById(id: number) {
+    const userFound = await this.prisma.user.findUnique({
+      where: {
+        id,
+      }
+    })
+
+    return userFound;
+  }
 
   async findUserByEmail(email: string): Promise<User | null> {
     const userExists = await this.prisma.user.findUnique({
@@ -30,5 +40,13 @@ export class UserRepository implements UserRepositoryInterface {
     });
 
     return newUser;
+  }
+
+  async deleteUserById(id: number): Promise<void> {
+    await this.prisma.user.delete({
+      where: {
+        id
+      }
+    });
   }
 }

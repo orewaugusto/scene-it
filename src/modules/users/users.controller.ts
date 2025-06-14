@@ -7,6 +7,8 @@ import { UserRepository } from "./repositories/users.repository";
 import { LoginUserDTO } from "./dtos/login-user.dto";
 import { LoginUserServiceInterface } from "./services/interfaces/login-user.service.interface";
 import { LoginUserService } from "./services/login-user.service";
+import { DeleteUserServiceInterface } from "./services/interfaces/delete-user-service.interface";
+import { DeleteUserService } from "./services/delete-user.service";
 
 export class UsersController {
   constructor(
@@ -17,6 +19,9 @@ export class UsersController {
     private loginUserService: LoginUserServiceInterface = new LoginUserService(
       userRepository,
       process.env.TOKEN_SECRET!,
+    ),
+    private deleteUserService: DeleteUserServiceInterface = new DeleteUserService(
+      userRepository,
     ),
   ) {}
 

@@ -24,6 +24,12 @@ describe("createUserService", () => {
   });
 
   it("Should not be able to create a new user with an already registered email", async () => {
+    const newUser = await createUserService.execute({
+      email: "johndoe@gmail.com",
+      password: "teste123456",
+      username: "John Doe",
+    });
+
     expect(async () => {
       await createUserService.execute({
         email: "johndoe@gmail.com",
@@ -31,5 +37,17 @@ describe("createUserService", () => {
         username: "John Doe",
       });
     }).rejects.toThrow("Email já cadastrado.");
+  });
+
+  it("Should correctly save the provided username", async () => {
+    const userData = {
+      email: "janedoe@example.com",
+      password: "securePass123",
+      username: "JaneDoe",
+    };
+
+    const createdUser = await createUserService.execute(userData);
+
+    expect(createdUser.username).toBe("JaneDoe");
   });
 });
