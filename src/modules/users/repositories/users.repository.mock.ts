@@ -1,6 +1,7 @@
 import { User } from "@prisma/client";
 import { UserRepositoryInterface } from "./interfaces/user-repository.interface";
 import { CreateUserDTO } from "../dtos/create-user.dto";
+import { UpdateUserDTO } from "../dtos/update-user.dto";
 
 export class UserRepositoryMock implements UserRepositoryInterface {
   public db: User[] = [];
@@ -41,6 +42,14 @@ export class UserRepositoryMock implements UserRepositoryInterface {
 
     this.db.push(newUser);
     return newUser;
+  }
+
+  async updateUserById(id: number, { bio }: UpdateUserDTO): Promise<void> {
+    const idx = this.db.findIndex(user => user.id === id);
+
+    if (idx >= 0) {
+      this.db[idx].bio = bio
+    }
   }
 
   async deleteUserById(id: number): Promise<void> {

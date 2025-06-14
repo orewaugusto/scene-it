@@ -2,6 +2,7 @@ import { User, PrismaClient } from "@prisma/client";
 
 import { UserRepositoryInterface } from "./interfaces/user-repository.interface";
 import { CreateUserDTO } from "../dtos/create-user.dto";
+import { UpdateUserDTO } from "../dtos/update-user.dto";
 
 export class UserRepository implements UserRepositoryInterface {
   constructor(private prisma = new PrismaClient()) { }
@@ -40,6 +41,15 @@ export class UserRepository implements UserRepositoryInterface {
     });
 
     return newUser;
+  }
+
+  async updateUserById(id: number, { bio }: UpdateUserDTO): Promise<void> {
+    await this.prisma.user.update({
+      where: {
+        id
+      },
+      data: { bio }
+    })
   }
 
   async deleteUserById(id: number): Promise<void> {
