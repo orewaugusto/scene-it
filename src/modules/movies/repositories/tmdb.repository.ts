@@ -25,7 +25,6 @@ export class TMDBRepository implements TMDBRepositoryInterface {
         language: "en-US",
       },
     });
-
     return response.data.results.map((movie: any) => ({
       title: movie.title,
       description: movie.overview,

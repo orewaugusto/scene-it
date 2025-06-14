@@ -17,7 +17,7 @@ export class FindMoviesByTitleService
     const movieFromDatabase = await this.movieRepository.findMoviesByTitle(
       title
     );
-    if (movieFromDatabase) {
+    if (movieFromDatabase.length) {
       return movieFromDatabase!;
     }
 
@@ -25,7 +25,6 @@ export class FindMoviesByTitleService
     if (!response) {
       throw "No results found";
     }
-
     return response;
   }
 }
