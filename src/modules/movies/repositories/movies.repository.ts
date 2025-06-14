@@ -2,7 +2,6 @@ import { PrismaClient, Movie } from "@prisma/client";
 import { CreateMovieDTO } from "../dtos/create-movie.dto";
 import { MoviesRepositoryInterface } from "./interfaces/movies-repository.interface";
 
-
 export class MoviesRepository implements MoviesRepositoryInterface {
   constructor(private prisma = new PrismaClient()) {}
 

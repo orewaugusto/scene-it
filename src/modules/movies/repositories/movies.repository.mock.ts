@@ -6,7 +6,7 @@ export class MoviesRepositoryMock implements MoviesRepositoryInterface {
   private db: Movie[] = [];
 
   async findMoviesByTitle(title: string): Promise<Movie[]> {
-    return this.db.filter(movie =>
+    return this.db.filter((movie) =>
       movie.title.toLowerCase().includes(title.toLowerCase())
     );
   }

@@ -1,8 +1,8 @@
 // create-movie.service.spec.ts
 import { MoviesRepositoryMock } from "../repositories/movies.repository.mock";
 import { MoviesRepositoryInterface } from "../repositories/interfaces/movies-repository.interface";
-import { CreateMovieServiceInterface } from "./create-movie.service.interface";
 import { CreateMovieService } from "./create-movie.service";
+import { CreateMovieServiceInterface } from "./interfaces/create-movie.service.interface";
 
 describe("CreateMovieService", () => {
   let moviesRepository: MoviesRepositoryInterface;

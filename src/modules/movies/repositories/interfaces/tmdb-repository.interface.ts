@@ -8,5 +8,5 @@ export interface MovieEntity {
 }
 
 export interface TMDBRepositoryInterface {
-  findMoviesByTitle(title: string): Promise<MovieEntity[]| null>
+  findMoviesByTitle(title: string): Promise<MovieEntity[] | null>;
 }
