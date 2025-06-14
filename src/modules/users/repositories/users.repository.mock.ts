@@ -49,6 +49,7 @@ export class UserRepositoryMock implements UserRepositoryInterface {
     const idx = this.db.findIndex((user) => user.id === id);
 
     if (idx >= 0) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       this.db.splice(idx, 1)[0];
     }
   }

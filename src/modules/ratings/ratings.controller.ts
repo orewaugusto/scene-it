@@ -10,8 +10,8 @@ export class RatingsController {
   constructor(
     private ratingsRepository: RatingsRepositoryInterface = new RatingsRepository(),
     private createRatingService: CreateRatingServiceInterface = new CreateRatingService(
-      ratingsRepository
-    )
+      ratingsRepository,
+    ),
   ) {}
 
   async createRating(req: Request, res: Response): Promise<Response> {
@@ -30,6 +30,7 @@ export class RatingsController {
       const newRating = await this.createRatingService.execute(dto);
 
       return res.status(201).json(newRating);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error(error);
       return res
