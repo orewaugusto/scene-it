@@ -15,7 +15,7 @@ describe("CreateRatingService", () => {
       userId: 1,
       movieId: 100,
       rating: 9,
-      review: "Amazing film!"
+      review: "Amazing film!",
     };
 
     const result = await service.execute(data);
@@ -28,18 +28,40 @@ describe("CreateRatingService", () => {
   });
 
   it("should assign a unique id to the new rating", async () => {
-    const r1 = await service.execute({ userId: 1, movieId: 1, rating: 8, review: "Good" });
-    const r2 = await service.execute({ userId: 2, movieId: 2, rating: 6, review: "Meh" });
+    const r1 = await service.execute({
+      userId: 1,
+      movieId: 1,
+      rating: 8,
+      review: "Good",
+    });
+    const r2 = await service.execute({
+      userId: 2,
+      movieId: 2,
+      rating: 6,
+      review: "Meh",
+    });
 
     expect(r1.id).not.toBe(r2.id);
   });
 
   it("should allow creating multiple ratings", async () => {
-    await service.execute({ userId: 1, movieId: 10, rating: 7, review: "Nice" });
+    await service.execute({
+      userId: 1,
+      movieId: 10,
+      rating: 7,
+      review: "Nice",
+    });
     await service.execute({ userId: 2, movieId: 20, rating: 5, review: "Ok" });
-    await service.execute({ userId: 3, movieId: 30, rating: 9, review: "Excellent" });
+    await service.execute({
+      userId: 3,
+      movieId: 30,
+      rating: 9,
+      review: "Excellent",
+    });
 
-    const repository = (service as any).ratingsRepository as RatingsRepositoryMock;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const repository = (service as any)
+      .ratingsRepository as RatingsRepositoryMock;
     expect(repository.getAll().length).toBe(3);
   });
 
@@ -48,7 +70,7 @@ describe("CreateRatingService", () => {
       userId: 4,
       movieId: 44,
       rating: 10,
-      review: "Masterpiece"
+      review: "Masterpiece",
     });
 
     expect(result.createdAt).toBeInstanceOf(Date);
@@ -60,7 +82,7 @@ describe("CreateRatingService", () => {
       userId: 7,
       movieId: 77,
       rating: 3,
-      review: "Bad"
+      review: "Bad",
     };
 
     const result = await service.execute(input);

@@ -4,7 +4,7 @@ import { MoviesController } from "./movies.controller";
 const router = Router();
 const controller = new MoviesController();
 
-// @ts-ignore
+// @ts-expect-error whatever
 router.get("/", controller.findMoviesByTitle.bind(controller));
 
 export default router;

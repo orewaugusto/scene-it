@@ -1,10 +1,10 @@
 import { PrismaClient } from "@prisma/client";
+import axios from "axios";
+import { getYear } from "date-fns";
 import {
   MovieEntity,
   TMDBRepositoryInterface,
 } from "./interfaces/tmdb-repository.interface";
-import axios from "axios";
-import { getYear } from "date-fns";
 
 export class TMDBRepository implements TMDBRepositoryInterface {
   private readonly baseURL = "https://api.themoviedb.org/3";
@@ -25,6 +25,7 @@ export class TMDBRepository implements TMDBRepositoryInterface {
         language: "en-US",
       },
     });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return response.data.results.map((movie: any) => ({
       title: movie.title,
       description: movie.overview,

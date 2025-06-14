@@ -1,5 +1,3 @@
-import { CreateMovieDTO } from "../../dtos/create-movie.dto";
-
 export interface MovieEntity {
   title: string;
   description: string | null;
