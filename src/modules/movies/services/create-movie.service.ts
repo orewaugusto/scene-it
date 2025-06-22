@@ -8,17 +8,19 @@ export class CreateMovieService implements CreateMovieServiceInterface {
   constructor(private moviesRepository: MoviesRepositoryInterface) {}
 
   async execute(data: CreateMovieDTO): Promise<Movie> {
-    const existingMovies = await this.moviesRepository.findMoviesByTitle(
-      data.title
+    const { movies: existingMovies } = await this.moviesRepository.findMovies(
+      data.title,
+      9999,
+      0,
     );
 
     const alreadyExists = existingMovies.some(
-      (movie) => movie.releaseYear === data.releaseYear
+      (movie) => movie.releaseYear === data.releaseYear,
     );
 
     if (alreadyExists) {
       throw new Error(
-        "Filme já cadastrado com esse título e ano de lançamento."
+        "Filme já cadastrado com esse título e ano de lançamento.",
       );
     }
 
