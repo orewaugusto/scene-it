@@ -128,20 +128,13 @@ export class UsersController {
     }
   }
 
-  async getUser(req: AuthenticatedRequest, res: Response) {
+  async getUser(req: Request, res: Response) {
     try {
       const { id } = req.params;
       const _id = Number(id);
 
       if (isNaN(_id)) {
         res.status(400).json({ error: "Invalid user ID" });
-        return;
-      }
-
-      if (req.userId !== _id) {
-        res.status(403).json({
-          message: "Forbidden: You can only get your own profile info.",
-        });
         return;
       }
 
