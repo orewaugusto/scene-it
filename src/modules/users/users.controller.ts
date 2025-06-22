@@ -65,7 +65,7 @@ export class UsersController {
         password,
       );
 
-      res.status(201).json(authenticationToken);
+      res.status(201).json({ token: authenticationToken });
     } catch (error: unknown) {
       res.status(400).json({
         error: (error as Error)?.message || "An error occurred during login.",
