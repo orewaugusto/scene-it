@@ -7,7 +7,7 @@ export class UserRepositoryMock implements UserRepositoryInterface {
   public db: User[] = [];
 
   async findUserById(id: number): Promise<User | null> {
-    const userFound = this.db.find(user => user.id === id);
+    const userFound = this.db.find((user) => user.id === id);
 
     if (!userFound) {
       return null;
@@ -17,7 +17,7 @@ export class UserRepositoryMock implements UserRepositoryInterface {
   }
 
   async findUserByEmail(email: string): Promise<User | null> {
-    const userExists = this.db.find(user => user.email === email);
+    const userExists = this.db.find((user) => user.email === email);
 
     if (!userExists) {
       return null;
@@ -26,7 +26,11 @@ export class UserRepositoryMock implements UserRepositoryInterface {
     return userExists;
   }
 
-  async createUser({ username, password, email }: CreateUserDTO): Promise<User> {
+  async createUser({
+    username,
+    password,
+    email,
+  }: CreateUserDTO): Promise<User> {
     const newUser: User = {
       username: username,
       password: password,
@@ -35,10 +39,8 @@ export class UserRepositoryMock implements UserRepositoryInterface {
       updatedAt: new Date(),
       id: this.db.length,
       bio: "",
-      avatarUrl: ""
-    }
-
-    console.log(newUser);
+      avatarUrl: "",
+    };
 
     this.db.push(newUser);
     return newUser;
@@ -53,9 +55,10 @@ export class UserRepositoryMock implements UserRepositoryInterface {
   }
 
   async deleteUserById(id: number): Promise<void> {
-    const idx = this.db.findIndex(user => user.id === id);
+    const idx = this.db.findIndex((user) => user.id === id);
 
     if (idx >= 0) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       this.db.splice(idx, 1)[0];
     }
   }

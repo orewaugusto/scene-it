@@ -1,4 +1,3 @@
-import { User } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { CreateUserDTO } from "../dtos/create-user.dto";
 import { CreateUserServiceInterface } from "./interfaces/create-user-service.interface";
@@ -21,14 +20,13 @@ export class CreateUserService implements CreateUserServiceInterface {
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
 
-    console.log(salt);
-
     const newUser = await this.userRepository.createUser({
       email,
       username,
       password: hash,
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _password, ...userWithoutPassword } = newUser;
     return userWithoutPassword;
   }
