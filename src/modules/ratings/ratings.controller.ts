@@ -1,6 +1,7 @@
-import { Request, Response } from "express";
-import { CreateRatingDTO } from "./dtos/create-rating.dto";
 import { validate } from "class-validator";
+import { Response } from "express";
+import { AuthenticatedRequest } from "../../middlewares/auth.middleware";
+import { CreateRatingDTO } from "./dtos/create-rating.dto";
 import { RatingsRepositoryInterface } from "./repositories/interfaces/ratings-repository.interface";
 import { RatingsRepository } from "./repositories/ratings.repository";
 import { CreateRatingService } from "./services/create-rating.service";
@@ -14,7 +15,7 @@ export class RatingsController {
     ),
   ) {}
 
-  async createRating(req: Request, res: Response): Promise<Response> {
+  async createRating(req: AuthenticatedRequest, res: Response) {
     try {
       const dto = new CreateRatingDTO();
       dto.userId = req.body.userId;
@@ -24,18 +25,21 @@ export class RatingsController {
 
       const errors = await validate(dto);
       if (errors.length > 0) {
-        return res.status(400).json({ message: "Invalid data", errors });
+        res.status(400).json({ message: "Invalid data", errors });
+        return;
       }
 
       const newRating = await this.createRatingService.execute(dto);
 
-      return res.status(201).json(newRating);
+      res.status(201).json(newRating);
+      return;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error(error);
-      return res
+      res
         .status(500)
         .json({ message: "Erro ao criar avaliação.", error: error.message });
+      return;
     }
   }
 }

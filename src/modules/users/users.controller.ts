@@ -12,6 +12,7 @@ import { DeleteUserService } from "./services/delete-user.service";
 import { UpdateUserServiceInterface } from "./services/interfaces/update-user.service.interface";
 import { UpdateUserService } from "./services/update-user.service";
 import { UpdateUserDTO } from "./dtos/update-user.dto";
+import { AuthenticatedRequest } from "../../middlewares/auth.middleware";
 
 export class UsersController {
   constructor(
@@ -44,6 +45,9 @@ export class UsersController {
       res.status(201).json(newUser);
     } catch (error) {
       console.error(error);
+      res
+        .status(400)
+        .json({ error: (error as Error)?.message || "An error occurred." });
     }
   }
 
@@ -57,26 +61,39 @@ export class UsersController {
       );
 
       res.status(201).json(authenticationToken);
-    } catch (error) {
-      console.error(error);
+    } catch (error: unknown) {
+      res.status(400).json({
+        error: (error as Error)?.message || "An error occurred during login.",
+      });
+      return;
     }
   }
 
-  async updateUser(req: Request, res: Response) {
+  async updateUser(req: AuthenticatedRequest, res: Response) {
     try {
       const { id } = req.params;
       const { bio } = req.body as UpdateUserDTO;
 
       const _id = Number(id);
       if (isNaN(_id)) {
-        return res.status(400).json({ error: "invalid id" });
+        res.status(400).json({ error: "invalid id" });
+        return;
+      }
+
+      if (req.userId !== _id) {
+        res.status(403).json({
+          message: "Forbidden: You can only update your own profile.",
+        });
+        return;
       }
 
       await this.updateUserService.execute(_id, { bio });
 
-      return res.status(200).json({ message: "user updated successfully" });
+      res.status(200).json({ message: "user updated successfully" });
+      return;
     } catch (error) {
-      return res.status(400).json({ error: error });
+      res.status(400).json({ error: error });
+      return;
     }
   }
 
@@ -86,14 +103,16 @@ export class UsersController {
       const _id = Number(id);
 
       if (isNaN(_id)) {
-        return res.status(400).json({ error: "invalid id" });
+        res.status(400).json({ error: "invalid id" });
+        return;
       }
 
       await this.deleteUserService.execute(_id);
 
       res.status(200).json({ message: "user deleted successfully" });
     } catch (error) {
-      return res.status(400).json({ error: error });
+      res.status(400).json({ error: error });
+      return;
     }
   }
 }

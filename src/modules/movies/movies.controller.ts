@@ -25,9 +25,8 @@ export class MoviesController {
       const { title } = req.query;
 
       if (typeof title !== "string" || !title.trim()) {
-        return res
-          .status(400)
-          .json({ message: "Título inválido ou não fornecido." });
+        res.status(400).json({ message: "Título inválido ou não fornecido." });
+        return;
       }
 
       const movies = await this.findMoviesByTitleService.execute(title);
