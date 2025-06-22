@@ -46,11 +46,16 @@ export class UserRepositoryMock implements UserRepositoryInterface {
     return newUser;
   }
 
-  async updateUserById(id: number, { bio }: UpdateUserDTO): Promise<void> {
-    const idx = this.db.findIndex(user => user.id === id);
+  async updateUserById(id: number, data: UpdateUserDTO): Promise<void> {
+    const idx = this.db.findIndex((user) => user.id === id);
 
     if (idx >= 0) {
-      this.db[idx].bio = bio
+      if (data.bio !== undefined) {
+        this.db[idx].bio = data.bio;
+      }
+      if (data.avatarUrl !== undefined) {
+        this.db[idx].avatarUrl = data.avatarUrl;
+      }
     }
   }
 

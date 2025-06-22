@@ -1,9 +1,20 @@
-import { IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
+import {
+  IsOptional,
+  IsString,
+  IsUrl,
+  MaxLength,
+  MinLength,
+} from "class-validator";
 
 export class UpdateUserDTO {
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MinLength(10)
   @MaxLength(256)
-  bio!: string;
+  bio?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsUrl()
+  avatarUrl?: string;
 }

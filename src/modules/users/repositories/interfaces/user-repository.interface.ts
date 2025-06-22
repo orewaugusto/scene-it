@@ -7,7 +7,6 @@ export interface UserRepositoryInterface {
   findUserByEmail(email: string): Promise<User | null>;
   // eslint-disable-next-line no-empty-pattern
   createUser({}: CreateUserDTO): Promise<User>;
-  // eslint-disable-next-line no-empty-pattern
-  updateUserById(id: number, {}: UpdateUserDTO): Promise<void>;
+  updateUserById(id: number, data: UpdateUserDTO): Promise<void>;
   deleteUserById(id: number): Promise<void>;
 }

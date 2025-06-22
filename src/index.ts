@@ -1,4 +1,5 @@
 import express, { Request, Response } from "express";
+import cors from "cors";
 const app = express();
 
 import userRouter from "./modules/users/users.routes";
@@ -8,6 +9,14 @@ import ratingsRouter from "./modules/ratings/ratings.routes";
 const PORT: string = "8080";
 
 app.use(express.json());
+
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
 
 // Routers
 app.use("/users", userRouter);

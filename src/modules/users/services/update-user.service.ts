@@ -3,14 +3,14 @@ import { UserRepositoryInterface } from "../repositories/interfaces/user-reposit
 import { UpdateUserServiceInterface } from "./interfaces/update-user.service.interface";
 
 export class UpdateUserService implements UpdateUserServiceInterface {
-  constructor(private userRepository: UserRepositoryInterface) { }
+  constructor(private userRepository: UserRepositoryInterface) {}
 
-  async execute(id: number, { bio }: UpdateUserDTO): Promise<void> {
-    const userFound = await this.userRepository.findUserById(id)
+  async execute(id: number, updateData: UpdateUserDTO): Promise<void> {
+    const userFound = await this.userRepository.findUserById(id);
     if (!userFound) {
       throw new Error("user not found");
     }
 
-    await this.userRepository.updateUserById(userFound.id, { bio })
+    await this.userRepository.updateUserById(userFound.id, updateData);
   }
 }
