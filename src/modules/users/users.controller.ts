@@ -12,6 +12,9 @@ import { DeleteUserService } from "./services/delete-user.service";
 import { UpdateUserServiceInterface } from "./services/interfaces/update-user.service.interface";
 import { UpdateUserService } from "./services/update-user.service";
 import { UpdateUserDTO } from "./dtos/update-user.dto";
+import { AuthenticatedRequest } from "../../middlewares/auth.middleware";
+import { GetUserByIdService } from "./services/get-user-by-id.service";
+import { GetUserByIdServiceInterface } from "./services/interfaces/get-user-by-id-service.interface";
 
 export class UsersController {
   constructor(
@@ -29,6 +32,9 @@ export class UsersController {
     private updateUserService: UpdateUserServiceInterface = new UpdateUserService(
       userRepository,
     ),
+    private getUserByIdService: GetUserByIdServiceInterface = new GetUserByIdService(
+      userRepository,
+    ),
   ) {}
 
   async createUser(req: Request, res: Response) {
@@ -44,6 +50,9 @@ export class UsersController {
       res.status(201).json(newUser);
     } catch (error) {
       console.error(error);
+      res
+        .status(400)
+        .json({ error: (error as Error)?.message || "An error occurred." });
     }
   }
 
@@ -57,43 +66,101 @@ export class UsersController {
       );
 
       res.status(201).json(authenticationToken);
-    } catch (error) {
-      console.error(error);
+    } catch (error: unknown) {
+      res.status(400).json({
+        error: (error as Error)?.message || "An error occurred during login.",
+      });
+      return;
     }
   }
 
-  async updateUser(req: Request, res: Response) {
+  async updateUser(req: AuthenticatedRequest, res: Response) {
     try {
       const { id } = req.params;
       const { bio } = req.body as UpdateUserDTO;
 
       const _id = Number(id);
       if (isNaN(_id)) {
-        return res.status(400).json({ error: "invalid id" });
+        res.status(400).json({ error: "invalid id" });
+        return;
+      }
+
+      if (req.userId !== _id) {
+        res.status(403).json({
+          message: "Forbidden: You can only update your own profile.",
+        });
+        return;
       }
 
       await this.updateUserService.execute(_id, { bio });
 
-      return res.status(200).json({ message: "user updated successfully" });
+      res.status(200).json({ message: "user updated successfully" });
+      return;
     } catch (error) {
-      return res.status(400).json({ error: error });
+      res.status(400).json({ error: error });
+      return;
     }
   }
 
-  async deleteUser(req: Request, res: Response) {
+  async deleteUser(req: AuthenticatedRequest, res: Response) {
     try {
       const { id } = req.params;
       const _id = Number(id);
 
       if (isNaN(_id)) {
-        return res.status(400).json({ error: "invalid id" });
+        res.status(400).json({ error: "invalid id" });
+        return;
+      }
+
+      if (req.userId !== _id) {
+        res.status(403).json({
+          message: "Forbidden: You can only delete your own user.",
+        });
+        return;
       }
 
       await this.deleteUserService.execute(_id);
 
       res.status(200).json({ message: "user deleted successfully" });
     } catch (error) {
-      return res.status(400).json({ error: error });
+      res.status(400).json({ error: error });
+      return;
+    }
+  }
+
+  async getUser(req: AuthenticatedRequest, res: Response) {
+    try {
+      const { id } = req.params;
+      const _id = Number(id);
+
+      if (isNaN(_id)) {
+        res.status(400).json({ error: "Invalid user ID" });
+        return;
+      }
+
+      if (req.userId !== _id) {
+        res.status(403).json({
+          message: "Forbidden: You can only get your own profile info.",
+        });
+        return;
+      }
+
+      const user = await this.getUserByIdService.execute(_id);
+
+      if (!user) {
+        res.status(404).json({ message: "User not found" });
+        return;
+      }
+
+      res.status(200).json(user);
+      return;
+    } catch (error: unknown) {
+      console.error(error);
+      res.status(500).json({
+        message: "Error fetching user.",
+        error: (error as Error)?.message || "An error occurred.",
+      });
+      return;
     }
   }
 }

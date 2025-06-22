@@ -22,22 +22,50 @@ export class MoviesController {
 
   async findMoviesByTitle(req: Request, res: Response) {
     try {
-      const { title } = req.query;
+      const { title, page = "1", limit = "20" } = req.query;
 
-      if (typeof title !== "string" || !title.trim()) {
-        return res
-          .status(400)
-          .json({ message: "Título inválido ou não fornecido." });
+      const pageNumber = parseInt(page as string);
+      const limitNumber = parseInt(limit as string);
+
+      if (
+        isNaN(pageNumber) ||
+        pageNumber < 1 ||
+        isNaN(limitNumber) ||
+        limitNumber < 1
+      ) {
+        return res.status(400).json({
+          message:
+            "Invalid page or limit provided. Page and limit must be positive integers.",
+        });
       }
 
-      const movies = await this.findMoviesByTitleService.execute(title);
+      const moviesResult = await this.findMoviesByTitleService.execute(
+        typeof title === "string" ? title.trim() : undefined,
+        pageNumber,
+        limitNumber,
+      );
 
-      res.status(200).json(movies);
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
+      if ("movies" in moviesResult && "totalCount" in moviesResult) {
+        res.status(200).json(moviesResult);
+      } else {
+        res.status(200).json({
+          movies: moviesResult,
+          totalCount: moviesResult.length,
+          currentPage: pageNumber,
+          limit: limitNumber,
+        });
+      }
+    } catch (error: unknown) {
       console.error(error);
-      res.status(500).json({ message: "Erro ao buscar filmes." });
+      if (error === "No results found") {
+        return res.status(404).json({
+          message: "No movies found with that title on TMDB or in database.",
+        });
+      }
+      res.status(500).json({
+        message: "Error fetching movies.",
+        error: (error as Error)?.message || "Unknown error",
+      });
     }
   }
 }

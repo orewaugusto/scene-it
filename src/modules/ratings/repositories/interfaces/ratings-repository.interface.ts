@@ -10,4 +10,5 @@ export interface RatingEntity {
 
 export interface RatingsRepositoryInterface {
   create(ratingData: CreateRatingDTO): Promise<Rating>;
+  findByMovieId(movieId: number): Promise<Rating[]>;
 }
