@@ -77,7 +77,7 @@ export class UsersController {
   async updateUser(req: AuthenticatedRequest, res: Response) {
     try {
       const { id } = req.params;
-      const { bio } = req.body as UpdateUserDTO;
+      const { bio, avatarUrl } = req.body as UpdateUserDTO;
 
       const _id = Number(id);
       if (isNaN(_id)) {
@@ -92,7 +92,7 @@ export class UsersController {
         return;
       }
 
-      await this.updateUserService.execute(_id, { bio });
+      await this.updateUserService.execute(_id, { bio, avatarUrl });
 
       res.status(200).json({ message: "user updated successfully" });
       return;
