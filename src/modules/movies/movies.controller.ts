@@ -33,10 +33,11 @@ export class MoviesController {
         isNaN(limitNumber) ||
         limitNumber < 1
       ) {
-        return res.status(400).json({
+        res.status(400).json({
           message:
             "Invalid page or limit provided. Page and limit must be positive integers.",
         });
+        return;
       }
 
       const moviesResult = await this.findMoviesByTitleService.execute(
@@ -58,9 +59,10 @@ export class MoviesController {
     } catch (error: unknown) {
       console.error(error);
       if (error === "No results found") {
-        return res.status(404).json({
+        res.status(404).json({
           message: "No movies found with that title on TMDB or in database.",
         });
+        return;
       }
       res.status(500).json({
         message: "Error fetching movies.",
