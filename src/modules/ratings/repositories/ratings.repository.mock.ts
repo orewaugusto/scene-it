@@ -6,7 +6,12 @@ export class RatingsRepositoryMock implements RatingsRepositoryInterface {
   private ratings: Rating[] = [];
   private currentId = 1;
 
-  async create({ userId, movieId, rating, review }: CreateRatingDTO): Promise<Rating> {
+  async create({
+    userId,
+    movieId,
+    rating,
+    review,
+  }: CreateRatingDTO): Promise<Rating> {
     const newRating: Rating = {
       id: this.currentId++,
       userId,
@@ -19,6 +24,10 @@ export class RatingsRepositoryMock implements RatingsRepositoryInterface {
 
     this.ratings.push(newRating);
     return newRating;
+  }
+
+  async findByMovieId(movieId: number): Promise<Rating[]> {
+    return this.ratings.filter((rating) => rating.movieId === movieId);
   }
 
   // Método auxiliar para testes (opcional)
