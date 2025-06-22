@@ -9,13 +9,17 @@ import { LoginUserServiceInterface } from "./services/interfaces/login-user.serv
 import { LoginUserService } from "./services/login-user.service";
 import { DeleteUserServiceInterface } from "./services/interfaces/delete-user-service.interface";
 import { DeleteUserService } from "./services/delete-user.service";
+import { UpdateUserServiceInterface } from "./services/interfaces/update-user.service.interface";
+import { UpdateUserService } from "./services/update-user.service";
+import { UpdateUserDTO } from "./dtos/update-user.dto";
 
 export class UsersController {
   constructor(
     private userRepository: UserRepositoryInterface = new UserRepository(),
     private createUserService: CreateUserServiceInterface = new CreateUserService(userRepository),
     private loginUserService: LoginUserServiceInterface = new LoginUserService(userRepository, process.env.TOKEN_SECRET!),
-    private deleteUserService: DeleteUserServiceInterface = new DeleteUserService(userRepository)
+    private deleteUserService: DeleteUserServiceInterface = new DeleteUserService(userRepository),
+    private updateUserService: UpdateUserServiceInterface = new UpdateUserService(userRepository)
   ) { }
 
   async createUser(req: Request, res: Response) {
@@ -39,6 +43,41 @@ export class UsersController {
       res.status(201).json(authenticationToken);
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  async updateUser(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const { bio } = req.body as UpdateUserDTO;
+
+      const _id = Number(id)
+      if (isNaN(_id)) {
+        return res.status(400).json({ error: 'invalid id' })
+      }
+
+      await this.updateUserService.execute(_id, { bio })
+
+      return res.status(200).json({ message: "user updated successfully" })
+    } catch (error) {
+      return res.status(400).json({ error: error })
+    }
+  }
+
+  async deleteUser(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const _id = Number(id)
+
+      if (isNaN(_id)) {
+        return res.status(400).json({ error: 'invalid id' })
+      }
+
+      await this.deleteUserService.execute(_id);
+
+      res.status(200).json({ message: "user deleted successfully" });
+    } catch (error) {
+      return res.status(400).json({ error: error })
     }
   }
 }
